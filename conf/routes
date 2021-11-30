@@ -12,5 +12,6 @@ GET     /assets/*file               controllers.Assets.versioned(path="/public",
 
 GET     /tasks                      controllers.TaskController.tasks
 POST    /tasks                      controllers.TaskController.newTask
+POST    /tasks/:id                  controllers.TaskController.editTask(id: Long)
 POST    /tasks/:id/delete           controllers.TaskController.deleteTask(id: Long)
 POST    /tasks/:id/complete         controllers.TaskController.completeTask(id: Long)

@@ -39,12 +39,27 @@ class TaskController @Inject()(val cc: MessagesControllerComponents) extends Abs
     def newTask = Action { implicit request =>
       taskForm.bindFromRequest.fold(
         errors => BadRequest(views.html.tasks(Task.all(), TaskForm.form)),
-        x=>x match { case(label,who) => {
+        x=>x match { case(label,who,body) => {
           val today = Calendar.getInstance().getTime()
           val timeFormat = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss")
           val time = timeFormat.format(today)
           
-          Task.create(label, who, time)
+          Task.create(label, who, time, body)
+          Redirect(routes.TaskController.tasks)
+          }
+        }
+      )
+    }
+
+    def editTask(id: Long) = Action { implicit request =>
+      taskForm.bindFromRequest.fold(
+        errors => BadRequest(views.html.tasks(Task.all(), TaskForm.form)),
+        x=>x match { case(label,who,body) => {
+          val today = Calendar.getInstance().getTime()
+          val timeFormat = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss")
+          val time = timeFormat.format(today)
+          
+          Task.update(id, label, who, time, body)
           Redirect(routes.TaskController.tasks)
           }
         }
@@ -64,7 +79,8 @@ class TaskController @Inject()(val cc: MessagesControllerComponents) extends Abs
     val taskForm = Form(
       tuple (
         "label" -> nonEmptyText,
-        "who" -> nonEmptyText
+        "who" -> nonEmptyText,
+        "body" -> nonEmptyText
       )
     )
 
